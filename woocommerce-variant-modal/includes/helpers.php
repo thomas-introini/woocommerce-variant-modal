@@ -16,7 +16,8 @@ function wcvm_get_settings(): array {
 		'show_quantity'       => 1,
 		'show_stock'          => 1,
 		'show_sku'            => 0,
-		'button_text'         => __( 'Scegli le opzioni', 'wc-variant-modal' ),
+		// Leave empty to preserve WooCommerce's original link text; UI will fallback.
+		'button_text'         => '',
 
 		'primary_color'       => '#1a73e8',
 		'accent_color'        => '#0b57d0',

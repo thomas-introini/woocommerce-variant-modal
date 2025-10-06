@@ -23,7 +23,7 @@ class WCVM_Frontend {
 			return $button;
 		}
 
-		// Replace button text if configured.
+		// Replace button text only if configured (leave Woo text by default for minimal changes).
 		if ( ! empty( $settings['button_text'] ) ) {
 			$button = preg_replace(
 				'#>(.*?)</a>#',
@@ -32,14 +32,27 @@ class WCVM_Frontend {
 			);
 		}
 
-		// Inject attributes for JS hook + accessibility.
+		// Inject our minimal attributes into the existing WooCommerce anchor without overwriting existing classes.
+		// 1) Ensure our JS hook class exists (append to existing class attribute if present).
+		if ( preg_match( '/<a[^>]*\bclass=/i', $button ) ) {
+			$button = preg_replace_callback(
+				'/\bclass=(\"|\')(.*?)(\1)/i',
+				function ( $m ) {
+					$quote   = $m[1];
+					$classes = trim( $m[2] . ' wcvm-open-modal' );
+					return 'class=' . $quote . $classes . $quote;
+				},
+				$button,
+				1
+			);
+		} else {
+			$button = preg_replace( '/<a(\s+)/i', '<a$1class="wcvm-open-modal" ', $button, 1 );
+		}
+
+		// 2) Add data attributes used by JS. Keep href intact as progressive enhancement fallback.
 		$button = preg_replace(
-			'/<a /',
-			sprintf(
-				'<a data-wcvm="1" data-product_id="%d" class="wcvm-open-modal %s" role="button" aria-haspopup="dialog" ',
-				$product->get_id(),
-				'button' // keep theme button styles
-			),
+			'/<a(\s+)/i',
+			sprintf( '<a$1data-wcvm="1" data-product_id="%d" ', $product->get_id() ),
 			$button,
 			1
 		);

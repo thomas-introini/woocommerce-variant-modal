@@ -21,7 +21,7 @@ fi
 
 # --- Derive version from plugin header or constant as fallback ---
 HEADER_VERSION=$(sed -n 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*\(.*\)$/\1/p' "${SRC_DIR}/${PLUGIN_SLUG}.php" | head -n1 | tr -d '\r')
-CONST_VERSION=$(sed -n "s/^[[:space:]]*define[(][[:space:]]*'SNP_VERSION',[[:space:]]*'\(.*\)'.*$/\1/p" "${SRC_DIR}/${PLUGIN_SLUG}.php" | head -n1 | tr -d '\r')
+CONST_VERSION=$(sed -n "s/^[[:space:]]*define[(][[:space:]]*'WCVM_VERSION',[[:space:]]*'\(.*\)'.*$/\1/p" "${SRC_DIR}/${PLUGIN_SLUG}.php" | head -n1 | tr -d '\r')
 VERSION="${HEADER_VERSION:-$CONST_VERSION}"
 : "${VERSION:=dev}"
 
